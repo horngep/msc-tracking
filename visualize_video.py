@@ -21,6 +21,8 @@ def evaluate(model):
 
     # Evaluation setup
     overlap_threshold = 0.2
+    threshold_list =  np.arange(0.05,1.05,0.05)
+    success_list = np.zeros(len(threshold_list))
 
     success_count = 0
     total_frames = 0
@@ -80,6 +82,10 @@ def evaluate(model):
                     total_frames += 1
                     cat_failures += 1
 
+                for j in range(0,len(threshold_list)):
+                    if overlap >= threshold_list[j]:
+                        success_list[j] += 1
+
         total_failures += cat_failures
         print('Category: ', category,' - #failures = ', cat_failures)
 
@@ -87,12 +93,26 @@ def evaluate(model):
     success_rate = success_count/total_frames
     avg_overlap = total_overlap/total_frames
     avg_fps = infer_count/infer_time
+
+    print('===============')
+
     print('Evaluation Summary')
     print('Overlap threshold = ', overlap_threshold)
     print('Success rate: ', success_rate)
     print('avg Overlap: ', avg_overlap)
     print('Totoal failures: ', total_failures)
+
+    print('===============')
+
     print('avg FPS: ', avg_fps)
+
+    print('===============')
+    success_rate_list = success_list/total_frames
+    print('overlap_threshold', threshold_list)
+    print('success_rate_list (acc)', success_rate_list)
+
+    print('===============')
+
     # return
     # overlap,
     # failures_each_class - depends on overlapping threshold
