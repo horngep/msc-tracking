@@ -14,7 +14,7 @@ if __name__ == "__main__":
     batchsize = 64
     ep = 20
 
-    # Data (60/20/20)
+    # Data (60/20/20) - should use 80/10/10
     num_train_data = 9431
     num_val_data = 3288
     num_test_data = 3158
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     #  TRANING
     # history = model.fit_generator(
     #                 generator=batch_generator(batchsize, 'train+val'),
-    #                 steps_per_epoch=int(num_train_data/(batchsize)),
+    #                 steps_per_epoch=int((num_train_data+num_val_data)/(batchsize)),
     #                 epochs=ep,
     #                 callbacks=[tb],
     #                 )

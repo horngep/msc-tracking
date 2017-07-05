@@ -108,7 +108,7 @@ def evaluate(model):
 
     print('===============')
     success_rate_list = success_list/total_frames
-    print('overlap_threshold', threshold_list)
+    print('overlap threshold lists', threshold_list)
     print('success_rate_list (acc)', success_rate_list)
 
     print('===============')
