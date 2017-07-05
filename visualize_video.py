@@ -7,17 +7,35 @@ import pdb
 import numpy as np
 import cv2
 import os
-
+import time
 
 #import config as cfg
 
 def evaluate(model):
+
+    '''
+    Evaluate the model
+    input: model
+    output: evaluation metrics
+    '''
+
+    # Evaluation setup
+    overlap_threshold = 0.2
+
+    success_count = 0
+    total_frames = 0
+    total_failures = 0
+    total_overlap = 0
+    infer_time = 0
+    infer_count = 0
 
     ann_prepend = '/home/ren/Desktop/data/alov300++/ann/test/'
     img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
 
     for category in os.listdir(ann_prepend): # eg. 01-Light
         folders = os.path.join(ann_prepend, category)
+
+        cat_failures = 0
 
         for ann_files in os.listdir(folders): # .ann files
             ANN_PATH = os.path.join(folders, ann_files)
@@ -33,29 +51,48 @@ def evaluate(model):
                     topleft_cf = 0
                     bottomright_cf = 0
 
+                t1 = time.time()
+                y_gt, y_ori, topleft_cf, bottomright_cf = inference(model,i,list_of_gtstring,img_path,topleft_cf,bottomright_cf)
+                t2 = time.time()
 
-                y_gt, y_ori, topleft_cf, bottomright_cf = inference(model,
-                                                        i,
-                                                        list_of_gtstring,
-                                                        img_path,
-                                                        topleft_cf,
-                                                        bottomright_cf)
 
+                # we lost the box (got a straight line not a box)
+                # everything else beyond this is not tracked
                 if y_ori[0,0] == y_ori[0,2] or y_ori[0,1] == y_ori[0,3]:
-                    # we lost the box (got a straight line not a box)
-                    # everything else beyond this is not tracked
                     frame_left = len(list_of_gtstring) - i
 
-                    # do some calculations for accuracy
-
+                    total_frames += frame_left
+                    cat_failures += frame_left
                     # all overlap = 0
                     break
 
+
                 # Evaluation
                 overlap = compute_IOU(y_ori, y_gt)
-                print(overlap)
-                # pdb.set_trace()
+                total_overlap += overlap
+                infer_time += (t2-t1)
+                infer_count += 1
 
+                if overlap >= overlap_threshold:
+                    success_count += 1
+                    total_frames += 1
+                else:
+                    total_frames += 1
+                    cat_failures += 1
+
+        total_failures += cat_failures
+        print('Category: ', category,' - #failures = ', cat_failures)
+
+    # summary
+    success_rate = success_count/total_frames
+    avg_overlap = total_overlap/total_frames
+    avg_fps = infer_count/infer_time
+    print('Evaluation Summary')
+    print('Overlap threshold = ', overlap_threshold)
+    print('Success rate: ', success_rate)
+    print('avg Overlap: ', avg_overlap)
+    print('Totoal failures: ', total_failures)
+    print('avg FPS: ', avg_fps)
     # return
     # overlap,
     # failures_each_class - depends on overlapping threshold

@@ -218,19 +218,19 @@ def convert_y_to_original_coordinates(y, original_dim, topleft_cf, bottomright_c
 
     # DEAL WITH OUT OF REGION
     if y_ori[0,0] < 0:
-        print(' Regressed value out of region, coordinates modified to be at the edge')
+        # print(' Regressed value out of region, coordinates modified to be at the edge')
         y_ori[0,0] = 0
 
     if y_ori[0,1] < 0:
-        print(' Regressed value out of region, coordinates modified to be at the edge')
+        # print(' Regressed value out of region, coordinates modified to be at the edge')
         y_ori[0,1] = 0
 
     if y_ori[0,2] > original_dim[1]:
-        print(' Regressed value out of region, coordinates modified to be at the edge')
+        # print(' Regressed value out of region, coordinates modified to be at the edge')
         y_ori[0,2] = original_dim[1]
 
     if y_ori[0,3] > original_dim[0]:
-        print(' Regressed value out of region, coordinates modified to be at the edge')
+        # print(' Regressed value out of region, coordinates modified to be at the edge')
         y_ori[0,3] = original_dim[0]
 
 

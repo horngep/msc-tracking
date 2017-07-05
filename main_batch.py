@@ -65,7 +65,7 @@ if __name__ == "__main__":
     #                 epochs=ep,
     #                 callbacks=[tb],
     #                 )
-    # model.save_weights('temp.h5')
+    # model.save_weights('../temp.h5')
     # ==================================
 
     # ==================================
