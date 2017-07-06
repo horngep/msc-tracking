@@ -8,7 +8,7 @@ from utils import *
 '''
 
 
-ann_dir = '/home/ren/Desktop/data/alov300++/alov300++_rectangleAnnotation_full'
+ann_dir = '/home/ren/Desktop/data/alov300++/ann/train'
 
 
 

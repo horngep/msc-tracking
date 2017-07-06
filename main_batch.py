@@ -12,15 +12,15 @@ if __name__ == "__main__":
 
     # Training param
     batchsize = 64
-    ep = 20
+    ep = 100
 
     # Data (60/20/20) - should use 80/10/10
-    num_train_data = 9431
-    num_val_data = 3288
-    num_test_data = 3158
+    num_train_data = 12380
+    num_val_data = 1778
+    num_test_data = 1719
 
     # Tensorboard callback $ tensorboard --logdir log/
-    tb = keras.callbacks.TensorBoard(log_dir='./log/baseline',
+    tb = keras.callbacks.TensorBoard(log_dir='./log/tmp',
                                     histogram_freq=0,
                                     write_graph=True)
     # Model checkpoint callback
@@ -32,45 +32,45 @@ if __name__ == "__main__":
     #                                     mode='min',
     #                                     period=1)
     # Early stopping callback
-    # es = keras.callbacks.EarlyStopping(monitor='val_loss',
-    #                                     min_delta=0,
-    #                                     patience=5,
-    #                                     verbose=0,
-    #                                     mode='min')
+    es = keras.callbacks.EarlyStopping(monitor='loss',
+                                        min_delta=0.05,
+                                        patience=20,
+                                        verbose=0,
+                                        mode='min')
 
 
     # ==================================
     # Train with train only (THIS IS ONLY FOR HYPER PARAM TUNING)
+    # model = goturn(0.005)
     # history = model.fit_generator(
     #                     generator=batch_generator(batchsize, 'train'),
     #                     steps_per_epoch=int(num_train_data/(batchsize)),
     #                     epochs=ep,
     #                     validation_data=batch_generator(batchsize, 'val'),
     #                     validation_steps=int(num_val_data/(batchsize)),
-    #                     callbacks=[tb, cp], # NOTE: tb, cp, es
+    #                     callbacks=[tb, cp, es], # NOTE: tb, cp, es
     #                     )
     # val_loss =  min(history.history['val_loss'])
     # ==================================
 
     # train with train+val
+    # =================================
+    #  TRANING
     lr = 0.005 # [0.001,0.005, 0.01]
 
     model = goturn(lr)
-
-    # =================================
-    #  TRANING
-    # history = model.fit_generator(
-    #                 generator=batch_generator(batchsize, 'train+val'),
-    #                 steps_per_epoch=int((num_train_data+num_val_data)/(batchsize)),
-    #                 epochs=ep,
-    #                 callbacks=[tb],
-    #                 )
-    # model.save_weights('../temp.h5')
+    history = model.fit_generator(
+                    generator=batch_generator(batchsize, 'train+val'),
+                    steps_per_epoch=int((num_train_data+num_val_data)/(batchsize)),
+                    epochs=ep,
+                    callbacks=[tb,es],
+                    )
+    model.save_weights('../temp.h5')
     # ==================================
 
     # ==================================
     # LOAD
-    model.load_weights('../baseline.h5')
+    # model.load_weights('../baseline.h5')
     # ==================================
 
 
