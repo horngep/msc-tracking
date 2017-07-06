@@ -34,7 +34,7 @@ if __name__ == "__main__":
     # Early stopping callback
     es = keras.callbacks.EarlyStopping(monitor='loss',
                                         min_delta=0.05,
-                                        patience=20,
+                                        patience=10,
                                         verbose=0,
                                         mode='min')
 
@@ -61,11 +61,11 @@ if __name__ == "__main__":
     model = goturn(lr)
     history = model.fit_generator(
                     generator=batch_generator(batchsize, 'train+val'),
-                    steps_per_epoch=int((num_train_data+num_val_data)/(batchsize)),
+                    steps_per_epoch=int((num_train_data+num_val_data)/(30*batchsize)),
                     epochs=ep,
                     callbacks=[tb,es],
                     )
-    model.save_weights('../temp.h5')
+    model.save_weights('../baseline100.h5')
     # ==================================
 
     # ==================================
