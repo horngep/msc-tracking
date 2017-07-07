@@ -155,7 +155,7 @@ def batch_generator_imagenet(batch_size, foldername='train'):
 
         XML_PATH1 = os.path.join(xml_path, str(int(fileno_1)).zfill(6) + '.xml')
         XML_PATH2 = os.path.join(xml_path, str(int(fileno_2)).zfill(6) + '.xml')
-
+        print(XML_PATH1)
 
         with open(XML_PATH1) as fd:
             dict1 = xmltodict.parse(fd.read())
