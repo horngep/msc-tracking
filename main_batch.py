@@ -46,7 +46,7 @@ if __name__ == "__main__":
                     generator=batch_generator_imagenet(batchsize, 'train'),
                     steps_per_epoch=200,
                     validation_data=batch_generator(batchsize, 'val'),
-                    validation_steps=200),
+                    validation_steps=200,
                     callbacks=[tb, cp, es], # NOTE: tb, cp, es
                     )
     model.save_weights('../imagenet-tmp.h5')
