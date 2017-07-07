@@ -44,9 +44,10 @@ if __name__ == "__main__":
     model = goturn(0.001)
     history = model.fit_generator(
                     generator=batch_generator_imagenet(batchsize, 'train'),
-                    steps_per_epoch=200,
+                    steps_per_epoch=5,
+                    epochs = ep,
                     validation_data=batch_generator_imagenet(batchsize, 'val'),
-                    validation_steps=200,
+                    validation_steps=5,
                     callbacks=[tb, cp, es], # NOTE: tb, cp, es
                     )
     model.save_weights('../imagenet-tmp.h5')
