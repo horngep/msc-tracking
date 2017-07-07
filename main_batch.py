@@ -21,11 +21,11 @@ if __name__ == "__main__":
 
 
     # Tensorboard callback $ tensorboard --logdir log/
-    tb = keras.callbacks.TensorBoard(log_dir='./log/baseline_new',
+    tb = keras.callbacks.TensorBoard(log_dir='./log/imagenet-temp',
                                     histogram_freq=0,
                                     write_graph=True)
     # Model checkpoint callback
-    cp = keras.callbacks.ModelCheckpoint(filepath='../baseline_new_best.h5',
+    cp = keras.callbacks.ModelCheckpoint(filepath='../imagenet-temp.h5',
                                         monitor='val_loss',
                                         verbose=0,
                                         save_best_only=True, # saving only best model
@@ -43,10 +43,11 @@ if __name__ == "__main__":
     # ==================================
     model = goturn(0.001)
     history = model.fit_generator(
-                    generator=batch_generator_imagenet(batchsize, 'val'),
-                    steps_per_epoch=30,
-                    epochs=ep,
-                    callbacks=[],
+                    generator=batch_generator_imagenet(batchsize, 'train'),
+                    steps_per_epoch=200,
+                    validation_data=batch_generator(batchsize, 'val'),
+                    validation_steps=200),
+                    callbacks=[tb, cp, es], # NOTE: tb, cp, es
                     )
     model.save_weights('../imagenet-tmp.h5')
     # val_loss =  min(history.history['val_loss'])
@@ -85,7 +86,9 @@ if __name__ == "__main__":
 
     # ==================================
     # LOAD
+    # model = goturn(0.001)
     # model.load_weights('../baseline100-final.h5')
+    # evaluate(model)
     # ==================================
 
 
@@ -114,7 +117,6 @@ if __name__ == "__main__":
     #
     #
 
-    evaluate(model)
 
 
 

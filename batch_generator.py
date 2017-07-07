@@ -128,20 +128,21 @@ def batch_generator_imagenet(batch_size, foldername='train'):
     it = 0 # use for iterating
 
     while True:
+        # Local and Azure
+        # prepend = '/home/ren/Desktop/data/imageNet/'
+        prepend = '/datadrive/imagenet/ILSVR/'
 
         if foldername == 'train':
             #  TODO: NOT TESTED
-            xml_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Annotations/VID/train'
-            img_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Data/VID/train'
+            xml_prepend = os.path.join(prepend, 'Annotations/VID/train')
+            img_prepend = os.path.join(prepend, 'Data/VID/train')
             fol = random.choice(os.listdir(xml_prepend)) # randomly choose between the 4 folders
             xml_prepend = os.path.join(xml_prepend, fol)
             img_prepend = os.path.join(img_prepend, fol)
+        elif foldername == 'val':
+            xml_prepend = os.path.join(prepend, 'Annotations/VID/val')
+            img_prepend = os.path.join(prepend, 'Data/VID/val')
 
-        if foldername == 'val':
-            xml_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Annotations/VID/val'
-            img_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Data/VID/val'
-
-        # for training data, theres another level of folder after VID/train
 
 
 
