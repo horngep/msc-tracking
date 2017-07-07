@@ -299,8 +299,8 @@ def dict_to_bbox(mydictionary, OBJECT_ID):
     xmax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmax']
     ymax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymax']
 
-    topleft = [xmin, ymin]
-    bottomright = [xmax, ymax]
+    topleft = [int(xmin), int(ymin)]
+    bottomright = [int(xmax), int(ymax)]
 
     return topleft, bottomright
 
