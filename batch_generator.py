@@ -41,7 +41,7 @@ def batch_generator(batch_size, foldername='train+val'):
                 foldername = 'train'
 
         # Randomly select an ann file
-        ann_prepend = '/datadrive/ren/data/ann' + foldername
+        ann_prepend = '/datadrive/ren/data/ann/' + foldername
         img_prepend = '/datadrive/ren/data/imagedata++'
         # ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
         # img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
