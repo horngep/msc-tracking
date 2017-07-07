@@ -78,7 +78,6 @@ def batch_generator(batch_size, foldername='train+val'):
 
         # Current frame
         img1 = cv2.imread(IMG_PATH1)
-        pdb.set_trace()
         img1 = crop_image(img1, topleft_cf, bottomright_cf)
         img1 = preprocess_crop(img1)
 
