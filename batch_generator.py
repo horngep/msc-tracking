@@ -41,10 +41,10 @@ def batch_generator(batch_size, foldername='train+val'):
                 foldername = 'train'
 
         # Randomly select an ann file
-        ann_prepend = '/datadrive/ren/data/ann/' + foldername
-        img_prepend = '/datadrive/ren/data/imagedata++'
-        # ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
-        # img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
+        # ann_prepend = '/datadrive/ren/data/ann/' + foldername
+        # img_prepend = '/datadrive/ren/data/imagedata++'
+        ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
+        img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
 
         ann_path1 = random.choice(os.listdir(ann_prepend)) # to folder level
         ann_prepend1 = os.path.join(ann_prepend, ann_path1)
@@ -71,8 +71,8 @@ def batch_generator(batch_size, foldername='train+val'):
         img_path = os.path.join(img_path, ann_path2)
         img_path = img_path.replace(".ann", "/")
 
-        IMG_PATH1 = img_path + str(frameno_1).zfill(8) + '.jpg'
-        IMG_PATH2 = img_path + str(frameno_2).zfill(8) + '.jpg'
+        IMG_PATH1 = img_path + str(int(frameno_1)).zfill(8) + '.jpg'
+        IMG_PATH2 = img_path + str(int(frameno_2)).zfill(8) + '.jpg'
 
         #print('img1: ', IMG_PATH1)
         #print('img2: ', IMG_PATH2)
