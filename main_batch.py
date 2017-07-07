@@ -45,7 +45,7 @@ if __name__ == "__main__":
     history = model.fit_generator(
                     generator=batch_generator_imagenet(batchsize, 'train'),
                     steps_per_epoch=200,
-                    validation_data=batch_generator(batchsize, 'val'),
+                    validation_data=batch_generator_imagenet(batchsize, 'val'),
                     validation_steps=200,
                     callbacks=[tb, cp, es], # NOTE: tb, cp, es
                     )

@@ -129,16 +129,16 @@ def batch_generator_imagenet(batch_size, foldername='train'):
 
     while True:
         # Local and Azure
-        # prepend = '/home/ren/Desktop/data/imageNet/ILSVRC'
+        # prepend = '/home/ren/Desktop/data/imageNet/ILSVRC/'
         prepend = '/datadrive/imagenet/ILSVRC/'
 
         if foldername == 'train':
             #  TODO: NOT TESTED
-            xml_prepend = os.path.join(prepend, 'Annotations/VID/train')
-            img_prepend = os.path.join(prepend, 'Data/VID/train')
-            fol = random.choice(os.listdir(xml_prepend)) # randomly choose between the 4 folders
-            xml_prepend = os.path.join(xml_prepend, fol)
-            img_prepend = os.path.join(img_prepend, fol)
+            xml_prepend_o = os.path.join(prepend, 'Annotations/VID/train')
+            img_prepend_o = os.path.join(prepend, 'Data/VID/train')
+            fol = random.choice(os.listdir(xml_prepend_o)) # randomly choose between the 4 folders
+            xml_prepend = os.path.join(xml_prepend_o, fol)
+            img_prepend = os.path.join(img_prepend_o, fol)
         elif foldername == 'val':
             xml_prepend = os.path.join(prepend, 'Annotations/VID/val')
             img_prepend = os.path.join(prepend, 'Data/VID/val')
@@ -162,10 +162,10 @@ def batch_generator_imagenet(batch_size, foldername='train'):
             folder1 = dict1['annotation']['folder']
             filename1 = dict1['annotation']['filename']
 
-            OBJECT_ID = random.randint(0, len(dict1['annotation']['object']) - 1)
+            num_object = len(dict1['annotation']['object'])
+            OBJECT_ID = random.randint(0, num_object - 1)
 
             topleft_1, bottomright_1 = dict_to_bbox(dict1, OBJECT_ID)
-
 
         with open(XML_PATH2) as fd:
             dict2 = xmltodict.parse(fd.read())
@@ -174,9 +174,12 @@ def batch_generator_imagenet(batch_size, foldername='train'):
 
             topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
 
-
-        IMG_PATH1 = img_prepend + '/' + folder1 + '/' + filename1 + '.JPEG'
-        IMG_PATH2 = img_prepend + '/' + folder2 + '/' + filename2 + '.JPEG'
+        if foldername == 'train':
+            IMG_PATH1 = img_prepend_o + '/' + folder1 + '/' + filename1 + '.JPEG'
+            IMG_PATH2 = img_prepend_o + '/' + folder2 + '/' + filename2 + '.JPEG'
+        elif foldername == 'val':
+            IMG_PATH1 = img_prepend + '/' + folder1 + '/' + filename1 + '.JPEG'
+            IMG_PATH2 = img_prepend + '/' + folder2 + '/' + filename2 + '.JPEG'
 
         # Current frame
         img1 = cv2.imread(IMG_PATH1)
@@ -211,11 +214,11 @@ def batch_generator_imagenet(batch_size, foldername='train'):
             X2 = list()
 
 
-
+        # return
 
 if __name__ == "__main__":
 
-    batch_generator_imagenet(8, 'val')
+    batch_generator_imagenet(8, 'train')
     # batch_generator(8,'train')
 
 

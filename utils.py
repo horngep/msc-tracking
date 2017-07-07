@@ -292,12 +292,16 @@ def dict_to_bbox(mydictionary, OBJECT_ID):
         bottomright
         coordinates bounding box relative to the image
     '''
-
-
-    xmin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmin']
-    ymin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymin']
-    xmax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmax']
-    ymax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymax']
+    if type(mydictionary['annotation']['object']) == list:
+        xmin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmin']
+        ymin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymin']
+        xmax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmax']
+        ymax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymax']
+    else:
+        xmin = mydictionary['annotation']['object']['bndbox']['xmin']
+        ymin = mydictionary['annotation']['object']['bndbox']['ymin']
+        xmax = mydictionary['annotation']['object']['bndbox']['xmax']
+        ymax = mydictionary['annotation']['object']['bndbox']['ymax']
 
     topleft = [int(xmin), int(ymin)]
     bottomright = [int(xmax), int(ymax)]
