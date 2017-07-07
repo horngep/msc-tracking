@@ -41,9 +41,10 @@ def batch_generator(batch_size, foldername='train+val'):
                 foldername = 'train'
 
         # Randomly select an ann file
-
-        ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
-        img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
+        ann_prepend = '/datadrive/ren/data/ann' + foldername
+        img_prepend = '/datadrive/ren/data/imagedata++'
+        # ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
+        # img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
 
         ann_path1 = random.choice(os.listdir(ann_prepend)) # to folder level
         ann_prepend1 = os.path.join(ann_prepend, ann_path1)
