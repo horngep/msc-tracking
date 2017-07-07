@@ -155,24 +155,31 @@ def batch_generator_imagenet(batch_size, foldername='train'):
 
         XML_PATH1 = os.path.join(xml_path, str(int(fileno_1)).zfill(6) + '.xml')
         XML_PATH2 = os.path.join(xml_path, str(int(fileno_2)).zfill(6) + '.xml')
-        print(XML_PATH1)
+        # print(XML_PATH1)
 
         with open(XML_PATH1) as fd:
             dict1 = xmltodict.parse(fd.read())
             folder1 = dict1['annotation']['folder']
             filename1 = dict1['annotation']['filename']
 
-            num_object = len(dict1['annotation']['object'])
-            OBJECT_ID = random.randint(0, num_object - 1)
+            if 'object' in  dict1['annotation']:
+                num_object = len(dict1['annotation']['object'])
+                OBJECT_ID = random.randint(0, num_object - 1)
 
-            topleft_1, bottomright_1 = dict_to_bbox(dict1, OBJECT_ID)
+                topleft_1, bottomright_1 = dict_to_bbox(dict1, OBJECT_ID)
+            else:
+                continue
 
         with open(XML_PATH2) as fd:
             dict2 = xmltodict.parse(fd.read())
             folder2 = dict2['annotation']['folder']
             filename2 = dict2['annotation']['filename']
 
-            topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
+            if 'object' in  dict2['annotation']:
+
+                topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
+            else:
+                continue
 
         if foldername == 'train':
             IMG_PATH1 = img_prepend_o + '/' + folder1 + '/' + filename1 + '.JPEG'
