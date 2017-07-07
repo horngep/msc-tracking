@@ -129,8 +129,8 @@ def batch_generator_imagenet(batch_size, foldername='train'):
 
     while True:
         # Local and Azure
-        # prepend = '/home/ren/Desktop/data/imageNet/'
-        prepend = '/datadrive/imagenet/ILSVR/'
+        # prepend = '/home/ren/Desktop/data/imageNet/ILSVRC'
+        prepend = '/datadrive/imagenet/ILSVRC/'
 
         if foldername == 'train':
             #  TODO: NOT TESTED
