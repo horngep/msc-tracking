@@ -281,7 +281,28 @@ def inference(model, i, list_of_gtstring, img_path, topleft_cf, bottomright_cf):
     return y_gt, y_ori, topleft_cf, bottomright_cf
 
 
+def dict_to_bbox(mydictionary, OBJECT_ID):
+    '''
+    Getting topleft and bottomright from xml dictionary
+    input:
+        dictionary
+        OBJECT_ID - object id of the one we are tracking
+    output:
+        topleft
+        bottomright
+        coordinates bounding box relative to the image
+    '''
 
+
+    xmin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmin']
+    ymin = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymin']
+    xmax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['xmax']
+    ymax = mydictionary['annotation']['object'][OBJECT_ID]['bndbox']['ymax']
+
+    topleft = [xmin, ymin]
+    bottomright = [xmax, ymax]
+
+    return topleft, bottomright
 
 
 

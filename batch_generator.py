@@ -1,12 +1,14 @@
 
 from utils import ann_to_list, parse_gtstring, crop_image, preprocess_crop
-from utils import convert_gt
+from utils import convert_gt, dict_to_bbox
 import cv2
 import numpy as np
 from PIL import Image
 import pdb
 from goturn import goturn
 import os, random
+import xmltodict
+import random
 # from imagenet_utils import *
 
 def batch_generator(batch_size, foldername='train+val'):
@@ -107,16 +109,94 @@ def batch_generator(batch_size, foldername='train+val'):
             X2 = list()
 
 
+#
+
+def batch_generator_imagenet(batchsize, foldername='train'):
+
+    if foldername == 'train':
+        #  TODO: NOT TESTED
+        xml_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Annotations/VID/train'
+        img_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Data/VID/train'
+        fol = random.choice(os.listdir(xml_prepend)) # randomly choose between the 4 folders
+        xml_prepend = os.path.join(xml_prepend, fol)
+        img_prepend = os.path.join(img_prepend, fol)
+
+    if foldername == 'val':
+        xml_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Annotations/VID/val'
+        img_prepend = '/home/ren/Desktop/data/imageNet/ILSVR/Data/VID/val'
+
+    # for training data, theres another level of folder after VID/train
+
+
+
+    xml_fold = random.choice(os.listdir(xml_prepend)) # to folder level
+    xml_path = os.path.join(xml_prepend, xml_fold)
+    num_xml = sum(os.path.isfile(os.path.join(xml_path, f)) for f in os.listdir(xml_path))
+
+    fileno_1 = random.randint(0, num_xml-2) # randomly select a frame
+    fileno_2 = fileno_1 + 1
+
+    XML_PATH1 = os.path.join(xml_path, str(int(fileno_1)).zfill(6) + '.xml')
+    XML_PATH2 = os.path.join(xml_path, str(int(fileno_2)).zfill(6) + '.xml')
+
+
+    with open(XML_PATH1) as fd:
+        dict1 = xmltodict.parse(fd.read())
+        folder1 = dict1['annotation']['folder']
+        filename1 = dict1['annotation']['folder']
+
+        # width1 = int(dict1['annotation']['size']['width'])
+        # height1 = int(dict1['annotation']['size']['height'])
+        # print(width1, height1)
+
+        OBJECT_ID = random.randint(0, len(dict1['annotation']['object']) - 1)
+
+        topleft_1, bottomright_1 = dict_to_bbox(dict1, OBJECT_ID)
+
+
+    with open(XML_PATH2) as fd:
+        dict2 = xmltodict.parse(fd.read())
+        folder2 = dict2['annotation']['folder']
+        filename2 = dict2['annotation']['folder']
+
+        width2 = int(dict2['annotation']['size']['width'])
+        height2 = int(dict2['annotation']['size']['height'])
+        print(width2, height2)
+
+        topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
+
+
+    IMG_PATH1 = img_prepend + folder1 + filename1 + '.JPEG'
+    IMG_PATH2 = img_prepend + folder2 + filename2 + '.JPEG'
+
+    pdb.set_trace()
+
+    # Current frame
+    img1 = cv2.imread(IMG_PATH1)
+    img1 = crop_image(img1, topleft_1, bottomright_1)
+    img1 = preprocess_crop(img1)
+    print(img1.shape)
+
+    # Next frame
+    img2 = cv2.imread(IMG_PATH2)
+    img2 = crop_image(img2, topleft_2, bottomright_2) # NOTE: crop region is the same as current frame NOT next frame
+    img2 = preprocess_crop(img2)
+    print(img2.shape)
+
+    # Convert ground truth of next frame to be between 0 and 10
+    gt = convert_gt(img1.shape, topleft_1, bottomright_1, topleft_1, bottomright_1)
+
+    pdb.set_trace()
+
+    return
+    # yield
 
 
 
 
+if __name__ == "__main__":
 
-
-
-
-
-
+    batch_generator_imagenet(8, 'val')
 
 
 
