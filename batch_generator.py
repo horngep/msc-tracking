@@ -175,9 +175,13 @@ def batch_generator_imagenet(batch_size, foldername='train'):
             folder2 = dict2['annotation']['folder']
             filename2 = dict2['annotation']['filename']
 
-            if 'object' in  dict2['annotation']:
 
-                topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
+
+            if 'object' in  dict2['annotation']:
+                if len(dict2['annotation']['object']) == len(dict1['annotation']['object']):
+                    topleft_2, bottomright_2 = dict_to_bbox(dict2, OBJECT_ID)
+                else:
+                    continue
             else:
                 continue
 

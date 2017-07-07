@@ -41,6 +41,7 @@ if __name__ == "__main__":
 
 
     # ==================================
+    # training on ImageNet video
     model = goturn(0.001)
     history = model.fit_generator(
                     generator=batch_generator_imagenet(batchsize, 'train'),
@@ -88,7 +89,7 @@ if __name__ == "__main__":
     # ==================================
     # LOAD
     # model = goturn(0.001)
-    # model.load_weights('../baseline100-final.h5')
+    # model.load_weights('../baseline_new_best.h5')
     # evaluate(model)
     # ==================================
 
