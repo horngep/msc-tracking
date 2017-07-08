@@ -41,10 +41,14 @@ def batch_generator(batch_size, foldername='train+val'):
                 foldername = 'train'
 
         # Randomly select an ann file
-        ann_prepend = '/datadrive/ren/data/ann/' + foldername
-        img_prepend = '/datadrive/ren/data/imagedata++'
-        # ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
-        # img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
+        # Local or Azure
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        if dir_path == '/home/ren/Dropbox/University/UCL/MscML/project/models':
+            ann_prepend = '/home/ren/Desktop/data/alov300++/ann/' + foldername
+            img_prepend = '/home/ren/Desktop/data/alov300++/imagedata++'
+        else:
+            ann_prepend = '/datadrive/ren/data/ann/' + foldername
+            img_prepend = '/datadrive/ren/data/imagedata++'
 
         ann_path1 = random.choice(os.listdir(ann_prepend)) # to folder level
         ann_prepend1 = os.path.join(ann_prepend, ann_path1)
@@ -128,9 +132,12 @@ def batch_generator_imagenet(batch_size, foldername='train'):
     it = 0 # use for iterating
 
     while True:
-        # Local and Azure
-        # prepend = '/home/ren/Desktop/data/imageNet/ILSVRC/'
-        prepend = '/datadrive/imagenet/ILSVRC/'
+        # Local or Azure
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        if dir_path == '/home/ren/Dropbox/University/UCL/MscML/project/models':
+            prepend = '/home/ren/Desktop/data/imageNet/ILSVRC/'
+        else:
+            prepend = '/datadrive/imagenet/ILSVRC/'
 
         if foldername == 'train':
             #  TODO: NOT TESTED
