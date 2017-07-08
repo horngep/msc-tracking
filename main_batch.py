@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     # Training param
     batchsize = 64
-    ep = 40
+    ep = 100
 
     # DATA: alov300 90/10/10
     num_alov_train_data = 12380
@@ -26,11 +26,11 @@ if __name__ == "__main__":
 
 
     # Tensorboard callback $ tensorboard --logdir log/
-    tb = keras.callbacks.TensorBoard(log_dir='./log/adam_alov',
+    tb = keras.callbacks.TensorBoard(log_dir='./log/imagenet-temp',
                                     histogram_freq=0,
                                     write_graph=True)
     # Model checkpoint callback
-    cp = keras.callbacks.ModelCheckpoint(filepath='../adam_alov_best.h5',
+    cp = keras.callbacks.ModelCheckpoint(filepath='../imagenet-best.h5',
                                         monitor='val_loss',
                                         verbose=0,
                                         save_best_only=True, # saving only best model
@@ -47,33 +47,33 @@ if __name__ == "__main__":
 
     # ==================================
     # training on ImageNet video
-    # model = goturn(0.001)
-    # history = model.fit_generator(
-    #                 generator=batch_generator_imagenet(batchsize, 'train'),
-    #                 steps_per_epoch=int(num_imagenet_train_data/batchsize),
-    #                 epochs = ep,
-    #                 validation_data=batch_generator_imagenet(batchsize, 'val'),
-    #                 validation_steps=int(num_imangenet_val_data/batchsize),
-    #                 callbacks=[tb, cp, es], # NOTE: tb, cp, es
-    #                 )
-    # model.save_weights('../imagenet-tmp.h5')
-    # val_loss =  min(history.history['val_loss'])
+    model = goturn(0.001)
+    history = model.fit_generator(
+                    generator=batch_generator_imagenet(batchsize, 'train'),
+                    steps_per_epoch=int(num_imagenet_train_data/batchsize),
+                    epochs = ep,
+                    validation_data=batch_generator_imagenet(batchsize, 'val'),
+                    validation_steps=int(num_imangenet_val_data/batchsize),
+                    callbacks=[tb, cp, es], # NOTE: tb, cp, es
+                    )
+    model.save_weights('../imagenet-final.h5')
+    val_loss =  min(history.history['val_loss'])
     # ==================================
 
 
     # ==================================
     # Train with train only (THIS IS ONLY FOR HYPER PARAM TUNING)
-    model = goturn(0.001)
-    history = model.fit_generator(
-                        generator=batch_generator(batchsize, 'train+val'),
-                        steps_per_epoch=int((num_alov_train_data+num_alov_val_data)/(batchsize)),
-                        epochs=ep,
-                        validation_data=batch_generator(batchsize, 'test'),
-                        validation_steps=int(num_alov_test_data/(batchsize)),
-                        callbacks=[tb, cp, es], # NOTE: tb, cp, es
-                        )
-    # val_loss =  min(history.history['val_loss'])
-    model.save_weights('../adam_alov_final.h5')
+    # model = goturn(0.001)
+    # history = model.fit_generator(
+    #                     generator=batch_generator(batchsize, 'train+val'),
+    #                     steps_per_epoch=int((num_alov_train_data+num_alov_val_data)/(batchsize)),
+    #                     epochs=ep,
+    #                     validation_data=batch_generator(batchsize, 'test'),
+    #                     validation_steps=int(num_alov_test_data/(batchsize)),
+    #                     callbacks=[tb, cp, es], # NOTE: tb, cp, es
+    #                     )
+    # # val_loss =  min(history.history['val_loss'])
+    # model.save_weights('../adam_alov_final.h5')
     # # ==================================
 
     # train with train+val
