@@ -7,7 +7,7 @@ from keras.models import Model
 import keras
 
 
-def goturn(learning_rate=0.01):
+def goturn(learning_rate=0.001):
 
     img1 = Input(shape=(3,227,227), name='main_input1')
     img2 = Input(shape=(3,227,227), name='main_input2')
@@ -36,9 +36,10 @@ def goturn(learning_rate=0.01):
 
     model = Model([img1, img2], out)
 
-    sgd = keras.optimizers.SGD(lr=learning_rate, momentum=0.0, decay=0.0, nesterov=False)
+    # sgd = keras.optimizers.SGD(lr=learning_rate, momentum=0.0, decay=0.0, nesterov=False)
+    adam = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 
-    model.compile(optimizer=sgd, loss='mean_absolute_error')
+    model.compile(optimizer=adam, loss='mean_absolute_error')
 
     return model
 
