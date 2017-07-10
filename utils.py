@@ -28,6 +28,8 @@ def plot_boundingbox(img_path, topleft, bottomright, vidname):
     ax.add_patch(rect)
     #plt.show()
     plt.savefig('../visualise_results/' + vidname + '.png')
+    
+    plt.close(fig)
 
     return None
 

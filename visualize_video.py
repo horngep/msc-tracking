@@ -128,8 +128,8 @@ def evaluate(model):
 
 def visualize_video(model):
 
-    vid_name = '01-Light_video00008'
-    vid_path = '01-Light/' + vid_name
+    vid_name = '05-Shape_video00005'
+    vid_path = '05-Shape/' + vid_name
     # chosen video path for ann
     ANN_PATH = '/home/ren/Desktop/data/alov300++/ann/test/' + vid_path + '.ann'
     list_of_gtstring = ann_to_list(ANN_PATH)
@@ -184,7 +184,7 @@ def visualize_video(model):
         bottomright_cf = y_ori[0,2:4]
 
 
-    return len(list_of_gtstring)
+    return
 
 
 
@@ -236,7 +236,7 @@ def visualise_calipsa(model):
 
 
 
-    return number_of_files
+    return
 
 
 
