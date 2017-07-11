@@ -7,7 +7,7 @@ import time
 import pdb
 from keras import backend as K
 import os
-
+from skipframe import skipframe
 
 if __name__ == "__main__":
 
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     # visualize_video(model)
     # visualise_calipsa(model)
-    evaluate(model)
+    skipframe(model)
     # best modl baseline2-final.h5 (sgd 0.005 - 14 epochs)
     # ==================================
 
