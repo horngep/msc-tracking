@@ -9,7 +9,7 @@ import keras
 
 def goturn(learning_rate=0.001):
 
-    img1 = Input(shape=(3,227,227), name='main_input1')
+    img1 = Input(shape=(3,227,227), name='main_input1') # (3,227,227)
     img2 = Input(shape=(3,227,227), name='main_input2')
 
     # AlexNet Current Frame
@@ -29,9 +29,9 @@ def goturn(learning_rate=0.001):
     embed = keras.layers.concatenate([alex1_out, alex2_out]) # (None, 4096x2=8192)
 
     # Fully Connected layer
-    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(embed)
-    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(x)
-    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(x)
+    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(embed) #2048
+    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(x) #2048
+    x = Dense(2048, activation='relu', kernel_initializer='TruncatedNormal')(x) #2048
     out = Dense(4, name='main_output')(x)
 
     model = Model([img1, img2], out)

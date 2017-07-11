@@ -1,7 +1,7 @@
 
 from goturn import goturn
 from batch_generator import batch_generator, batch_generator_imagenet
-from visualize_video import visualize_video, visualise_calipsa, evaluate
+from visualize_video import visualize_video, visualise_calipsa, evaluate, display_results
 import keras
 import time
 import pdb
@@ -98,14 +98,18 @@ if __name__ == "__main__":
     # model.save_weights('../imagenet-tmp.h5')
     # # ==================================
 
+
+
     # # ==================================
-    # LOAD
-    model = goturn(0.005)
-    model.load_weights('../finetuned-final.h5')
+    # # LOAD
+    # model1 = goturn(0.005)
+    # model1.load_weights('../baseline2-final.h5')
+    # model2 = goturn(0.005)
+    # model2.load_weights('../finetuned-final.h5')
 
     # visualize_video(model)
     # visualise_calipsa(model)
-    skipframe(model)
+
     # best modl baseline2-final.h5 (sgd 0.005 - 14 epochs)
     # ==================================
 

@@ -8,6 +8,9 @@ import numpy as np
 import cv2
 import os
 import time
+from PIL import Image
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 
 #import config as cfg
 
@@ -123,7 +126,137 @@ def evaluate(model):
 
     return
 
+def display_results(model1, model2, skipframe):
 
+    '''
+    Show results of model1 model2 and groundtruth in the same plot
+    input: skipframe - no of frame skip (if 0, no skip frame, if 1, skip a frame)
+    '''
+    #
+    # vid_name = '05-Shape_video00005'
+    # vid_path = '05-Shape/' + vid_name
+
+    if skipframe == 0:
+        saving_prepend = '../visualise_results/normal/'
+    else:
+        saving_prepend = '../visualise_results/skipframe/'
+
+
+    ann_prepend = '/home/ren/Desktop/data/alov300++/ann/test/'
+
+    for vid_path in os.listdir(ann_prepend):
+
+        ann_inter = os.path.join(ann_prepend, vid_path)
+        for vid_name in os.listdir(ann_inter):
+
+            vid_name = vid_name.replace('.ann','')
+            # chosen video path for ann
+            ANN_PATH = ann_prepend + vid_path  +'/'+ vid_name + '.ann'
+            list_of_gtstring = ann_to_list(ANN_PATH)
+
+            # chosen video path for video frames
+            img_path = '/home/ren/Desktop/data/alov300++/imagedata++/' + vid_path + '/' + vid_name + '/'
+
+
+            for i in range(0,len(list_of_gtstring)-1-skipframe, skipframe+1):
+
+                # Get Image
+                gtstring_1 = list_of_gtstring[i]
+                gtstring_2 = list_of_gtstring[i+1+skipframe]
+
+                if i == 0:
+                    frameno_1, topleft_cf, bottomright_cf = parse_gtstring(gtstring_1)
+                    topleft_cf1 = topleft_cf
+                    topleft_cf2 = topleft_cf
+                    bottomright_cf1 = bottomright_cf
+                    bottomright_cf2 = bottomright_cf
+                else:
+                    frameno_1, _, _ = parse_gtstring(gtstring_1)
+
+                frameno_2, topleft_gt, bottomright_gt = parse_gtstring(gtstring_2)
+
+
+                IMG_PATHa = img_path + str(int(frameno_1)).zfill(8) + '.jpg'
+                IMG_PATHb = img_path + str(int(frameno_2)).zfill(8) + '.jpg'
+                print(IMG_PATHa)
+                # print(IMG_PATHb)
+
+
+                img_a1 = cv2.imread(IMG_PATHa)
+                img_a1 = crop_image(img_a1, topleft_cf1, bottomright_cf1)
+                img_a1 = preprocess_crop(img_a1)
+
+                img_b1_ori = cv2.imread(IMG_PATHb)
+                img_b1 = crop_image(img_b1_ori, topleft_cf1, bottomright_cf1)
+                img_b1 = preprocess_crop(img_b1)
+
+
+                img_a2 = cv2.imread(IMG_PATHa)
+                img_a2 = crop_image(img_a2, topleft_cf2, bottomright_cf2)
+                img_a2 = preprocess_crop(img_a2)
+
+                img_b2_ori = cv2.imread(IMG_PATHb)
+                img_b2 = crop_image(img_b2_ori, topleft_cf2, bottomright_cf2)
+                img_b2 = preprocess_crop(img_b2)
+
+
+                # Regressed
+                y1 = model1.predict([img_a1, img_b1])
+                y_ori1 = convert_y_to_original_coordinates(y1, img_b1_ori.shape, topleft_cf1, bottomright_cf1)
+
+                y2 = model2.predict([img_a2, img_b2])
+                y_ori2 = convert_y_to_original_coordinates(y2, img_b2_ori.shape, topleft_cf2, bottomright_cf2)
+
+
+                # plot boudning boxes
+                if i == 0:
+                    # add first image to the list (gt)
+                    vidname = vid_name + str(frameno_1)
+                    plot_boundingbox(IMG_PATHa, topleft_cf, bottomright_cf, vidname)
+
+
+
+                vidname = vid_name + '_f'+ str(frameno_2)
+
+                # plotting
+                width1 = bottomright_cf1[0]-topleft_cf1[0]
+                height1 = bottomright_cf1[1]-topleft_cf1[1]
+
+                width2 = bottomright_cf2[0]-topleft_cf2[0]
+                height2 = bottomright_cf2[1]-topleft_cf2[1]
+
+                widthgt = bottomright_gt[0]-topleft_gt[0]
+                heighgt = bottomright_gt[1]-topleft_gt[1]
+
+
+                im = np.array(Image.open(IMG_PATHb), dtype=np.uint8)
+                fig,ax = plt.subplots(1)
+                ax.imshow(im)
+
+                # model1
+                rect1 = patches.Rectangle(y_ori1[0,0:2],width1,height1,linewidth=1,edgecolor='b',facecolor='none')
+                ax.add_patch(rect1)
+
+                # model2
+                rect2 = patches.Rectangle(y_ori2[0,0:2],width2,height2,linewidth=1,edgecolor='g',facecolor='none')
+                ax.add_patch(rect2)
+
+                # groundtruth
+                rectgt = patches.Rectangle(topleft_gt,widthgt,heighgt,linewidth=1,edgecolor='r',facecolor='none')
+                ax.add_patch(rectgt)
+
+                plt.savefig(saving_prepend + vidname + '.png')
+
+                plt.close(fig)
+
+                # We are using the previous tracking results track next frame
+                topleft_cf1 = y_ori1[0,0:2]
+                bottomright_cf1 = y_ori1[0,2:4]
+
+                topleft_cf2 = y_ori2[0,0:2]
+                bottomright_cf2 = y_ori2[0,2:4]
+
+    return
 
 
 def visualize_video(model):
@@ -185,6 +318,7 @@ def visualize_video(model):
 
 
     return
+
 
 
 

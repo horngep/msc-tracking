@@ -9,7 +9,7 @@ import os
 import time
 
 
-def skipframe(model):
+def skipframe(model, frameskip):
 
 
 
@@ -41,13 +41,18 @@ def skipframe(model):
             img_path = img_path.replace(".ann", "")
 
             # for each image in /01-Light/01-Light_video00001
-            for i in range(0,len(list_of_gtstring)-2, 2):
+            for i in range(0,len(list_of_gtstring)-2, frameskip+1):
                 if i == 0:
                     topleft_cf = 0
                     bottomright_cf = 0
 
                 t1 = time.time()
-                y_gt, y_ori, topleft_cf, bottomright_cf = inference_skipframe(model,i,list_of_gtstring,img_path,topleft_cf,bottomright_cf)
+                y_gt, y_ori, topleft_cf, bottomright_cf = inference_skipframe(model,i,
+                                                                    list_of_gtstring,
+                                                                    img_path,
+                                                                    topleft_cf,
+                                                                    bottomright_cf,
+                                                                    frameskip)
                 t2 = time.time()
 
 
@@ -116,7 +121,7 @@ def skipframe(model):
 
     return
 
-def inference_skipframe(model, i, list_of_gtstring, img_path, topleft_cf, bottomright_cf):
+def inference_skipframe(model, i, list_of_gtstring, img_path, topleft_cf, bottomright_cf, frameskip):
 
     '''
     shorthening the inference line
@@ -125,7 +130,7 @@ def inference_skipframe(model, i, list_of_gtstring, img_path, topleft_cf, bottom
 
 
     gtstring_1 = list_of_gtstring[i]
-    gtstring_2 = list_of_gtstring[i+2]
+    gtstring_2 = list_of_gtstring[i+frameskip+1]
 
     if i == 0:
         frameno_1, topleft_cf, bottomright_cf = parse_gtstring(gtstring_1)
